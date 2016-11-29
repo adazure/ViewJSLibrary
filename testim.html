@@ -23,8 +23,35 @@
         ul>li:nth-child(odd) {
             background-color: #f5f5f5;
         }
+        
+        #more {
+            margin: 100px auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            max-width: 990px;
+        }
     </style>
-    <!--  <ul>
+    <!--  -->
+</head>
+
+<body>
+
+
+    <div id="more" source="https://jsonplaceholder.typicode.com/posts" render="
+    <ul>
+        <li><h2>@(title)</h2></li>
+        <li>@(body)</li>
+    </ul>
+    ">
+    </div>
+
+    <script src="viewlibrary.js">
+    </script>
+
+</body>
+
+</html>
+<!-- <ul>
         <li><b>Name</b></li>
         <li>@(name)</li>
         <li><b>UserName</b></li>
@@ -47,115 +74,3 @@
         <li><b>Comment</b></li>
         <li>@(company.catchPhrase)</li>
     </ul>-->
-</head>
-
-<body>
-
-
-    <service source="https://jsonplaceholder.typicode.com/photos" render="<p>@(title)</p>"></service>
-
-    <script defer>
-        /**
-         * Start application
-         */
-
-
-        function service(dom) {
-
-            var renderContent = dom.getAttribute('render');
-            var url = dom.getAttribute('source');
-            var listen = dom.getAttribute('listen');
-
-            while (dom.attributes.length > 0)
-                dom.removeAttribute(dom.attributes[0].name);
-
-            //Servisten bilgileri altık
-            servisim(url, function(data) {
-
-                //Örnek @(experience.marka) benzeyen verileri bize liste halinde verdi
-                var matchResult = renderContent.match(/\@\((.*?)?\)/g);
-
-                var all = [];
-                if (data && data.length) {
-                    //Servisten gelen kayıt sayısı kadar döngü oluşturalım
-                    for (var i = 0, len = data.length; i < len; i++) {
-
-                        var result = {};
-                        find(data[i], "", result);
-                        all.push(replaceModel(matchResult, renderContent, result, i, data[i]));
-                    }
-
-
-                } else if (data && typeof data == 'object') {
-
-                    var result = {};
-                    find(data, "", result);
-                    all.push(replaceModel(matchResult, renderContent, result, 0, data));
-                }
-
-
-                dom.innerHTML = all.join('\n');
-                all = null;
-
-            });
-
-        }
-
-
-        function replaceModel(match, renderContent, table, index, dataorigin) {
-
-            var result = renderContent;
-            for (var i = 0, len = match.length; i < len; i++) {
-
-                //Grouplayalım
-                var group = (/\@\((.*?)?\)/g).exec(match[i]);
-
-                if (!table.hasOwnProperty(group[1]))
-                    throw 'Servis tarafından gelen data içerisindeki ' + (index + 1) + '. kayıtta \"' + group[1] + '\" alanı bulunamadı.\n\n' + JSON.stringify(dataorigin);
-
-                if (group != null)
-                    result = result.replace(new RegExp('\\@\\(' + group[1] + '\\)', 'g'), table[group[1]]);
-
-            }
-
-            return result;
-
-        }
-
-
-        function find(data, result, app) {
-
-            for (var key in data) {
-
-                dal(key, data[key], result, app);
-
-            }
-        }
-
-
-        function birlestir(value1, value2) {
-            if (!value1) return value2;
-            return value1 + '.' + value2;
-        }
-
-
-        function dal(key, value, result, app) {
-
-            var response = result ? result : "";
-            response = birlestir(response, key);
-            if (typeof value !== "object") {
-                app[response] = value;
-            } else {
-                find(value, response, app);
-            }
-
-        }
-
-
-
-        service(document.querySelector('service'));
-    </script>
-
-</body>
-
-</html>
