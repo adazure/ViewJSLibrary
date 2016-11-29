@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="Kakao.package.min.js"></script>
 
 <head>
     <meta charset="UTF-8">
-    <script src="src.js">
-        //https://jsonplaceholder.typicode.com/users/1
-    </script>
     <style>
         ul {
             padding: 10px;
@@ -31,17 +29,40 @@
             max-width: 990px;
         }
     </style>
+    <script>
+        var customData = [{
+            name: 'KEREM',
+            lastname: 'YAVUZ',
+            comment: 'Lorem ipsum dolor sit amet',
+            address: {
+                city: 'İstanbul'
+            }
+        }, {
+            name: 'MURAT',
+            lastname: 'SOYLU',
+            comment: 'Lorem ipsum dolor sit amet',
+            address: {
+                city: 'Ankara'
+            }
+        }]
+    </script>
     <!--  -->
 </head>
 
 <body>
 
 
-    <div id="more" source="https://jsonplaceholder.typicode.com/posts" render="
-    <ul>
-        <li><h2>@(title)</h2></li>
-        <li>@(body)</li>
-    </ul>
+    <div id="more" source="customData" render="
+        <ul class='map in all-6'>
+        <li><b>Adı</b></li>
+        <li>#name#</li>
+        <li><b>Soyadı</b></li>
+        <li>#lastname#</li>
+        <li><b>Yorum</b></li>
+        <li>#comment#</li>
+        <li><b>Adres</b></li>
+        <li>#address.city#</li>
+       </ul>
     ">
     </div>
 
